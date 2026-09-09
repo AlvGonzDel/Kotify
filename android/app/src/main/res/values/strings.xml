@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kotify</string>
+    <string name="title_activity_main">Kotify</string>
+    <string name="package_name">com.silvercuplabs.kotify</string>
+    <string name="custom_url_scheme">com.silvercuplabs.kotify</string>
+</resources>
