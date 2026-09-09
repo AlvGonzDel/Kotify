@@ -1,4 +1,4 @@
-import { MenuItem } from '../interfaces/menu.interface';
+import { MenuItem } from '../interfaces/menu-item.interface';
 
 // Datos de prueba. Sustituir por llamadas HTTP reales cuando exista la API.
 export const MOCK_MENU_ITEMS: MenuItem[] = [

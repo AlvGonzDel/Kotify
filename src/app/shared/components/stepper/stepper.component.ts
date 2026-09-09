@@ -39,7 +39,7 @@ import { IonIcon } from '@ionic/angular/standalone';
         type="button"
         class="rounded-full flex items-center justify-center"
         [ngClass]="btnClasses"
-        [disabled]="value >= max"
+        [disabled]="!manualIncrease && value >= max"
         aria-label="Sumar"
         (click)="increase()"
       >
@@ -54,7 +54,15 @@ export class StepperComponent {
   @Input() max = 99;
   @Input() size: 'sm' | 'lg' = 'lg';
   @Input() label?: string;
+  /**
+   * Si es true, el botón "+" NO incrementa el valor internamente:
+   * solo emite increaseRequested para que el padre decida qué hacer
+   * (p.ej. abrir una pantalla de detalle antes de sumar).
+   */
+  @Input() manualIncrease = false;
+
   @Output() valueChange = new EventEmitter<number>();
+  @Output() increaseRequested = new EventEmitter<void>();
 
   get btnClasses(): string {
     return this.size === 'lg'
@@ -73,6 +81,10 @@ export class StepperComponent {
   }
 
   increase(): void {
+    if (this.manualIncrease) {
+      this.increaseRequested.emit();
+      return;
+    }
     if (this.value < this.max) this.emit(this.value + 1);
   }
 

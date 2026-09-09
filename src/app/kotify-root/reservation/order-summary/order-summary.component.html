@@ -1,3 +1,86 @@
-<p>
-  order-summary works!
-</p>
+<ion-content [fullscreen]="true" class="order-summary">
+  <div class="flex items-center px-5 py-4">
+    <app-back-button (back)="goBack()"></app-back-button>
+    <h1
+      class="flex-1 text-center text-xs font-semibold tracking-wider uppercase text-kotify-muted m-0"
+    >
+      Tu pedido
+    </h1>
+    <span class="w-10"></span>
+  </div>
+
+  <div class="px-5 flex flex-col gap-3 pb-40">
+    <div
+      class="flex items-center gap-2 bg-white rounded-2xl px-4 py-3.5 text-[15px] text-kotify-ink"
+    >
+      <ion-icon name="people" class="text-lg text-kotify-muted"></ion-icon>
+      {{ order().partySize }} personas
+    </div>
+
+    <div
+      class="bg-white rounded-2xl px-4 py-3.5"
+      *ngFor="let item of order().items"
+      (click)="goToItemDetail(item)"
+    >
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[15px] font-semibold text-kotify-ink">
+          {{ item.name }}
+        </span>
+        <span class="text-[15px] font-semibold text-kotify-ink">
+          {{ formatPrice(item.unitPrice * item.quantity) }} €
+        </span>
+      </div>
+
+      <p *ngIf="item.option" class="text-[13px] text-kotify-muted mb-1">
+        {{ item.option }}
+      </p>
+      <p *ngIf="item.notes" class="text-[13px] text-kotify-muted italic mb-1">
+        "{{ item.notes }}"
+      </p>
+
+      <div class="flex items-center justify-between">
+        <span class="text-[13px] text-kotify-muted">
+          {{ formatPrice(item.unitPrice) }} € / ud.
+        </span>
+        <div (click)="$event.stopPropagation()">
+          <app-stepper
+            size="sm"
+            [value]="item.quantity"
+            [min]="0"
+            (valueChange)="onQuantityChange(item, $event)"
+          ></app-stepper>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl px-4 py-3.5 flex flex-col gap-2">
+      <div
+        class="flex items-center justify-between text-[15px] text-kotify-muted"
+      >
+        <span>Subtotal</span>
+        <span>{{ formatPrice(subtotal()) }} €</span>
+      </div>
+      <div
+        class="flex items-center justify-between text-[15px] font-semibold text-kotify-ink"
+      >
+        <span>Total</span>
+        <span>{{ formatPrice(subtotal()) }} €</span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="fixed bottom-0 left-0 right-0 px-5 pt-3 pb-7 bg-kotify-cream flex flex-col gap-3"
+  >
+    <app-primary-button (pressed)="continue()">
+      Elegir hora de llegada
+    </app-primary-button>
+    <button
+      type="button"
+      class="text-sm text-kotify-muted/70 font-medium text-center"
+      (click)="addMoreItems()"
+    >
+      Añadir más platos
+    </button>
+  </div>
+</ion-content>

@@ -1,20 +1,25 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, computed, signal } from '@angular/core';
 import { ArrivalSlot, Order, OrderItem } from '../interfaces/order.interface';
 import { EMPTY_ORDER } from '../mocks/order.mock';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  private readonly orderSubject = new BehaviorSubject<Order>({
-    ...EMPTY_ORDER,
-  });
+  private readonly orderSignal = signal<Order>({ ...EMPTY_ORDER });
 
-  /** Observable del pedido en curso, para pintar en las pantallas del flujo. */
-  readonly order$: Observable<Order> = this.orderSubject.asObservable();
+  /** Signal del pedido en curso, para leer reactivamente en las plantillas. */
+  readonly order = this.orderSignal.asReadonly();
 
-  /** Valor actual sin suscribirse (útil para leer antes de navegar). */
+  /** Total calculado, se recalcula solo cuando cambian los items. */
+  readonly subtotal = computed(() =>
+    this.orderSignal().items.reduce(
+      (sum, i) => sum + i.unitPrice * i.quantity,
+      0,
+    ),
+  );
+
+  /** Valor actual sin depender de un contexto reactivo (p.ej. antes de navegar). */
   get snapshot(): Order {
-    return this.orderSubject.value;
+    return this.orderSignal();
   }
 
   setRestaurant(restaurantId: string): void {
@@ -45,6 +50,18 @@ export class OrderService {
     this.patch({ items });
   }
 
+  /** Actualiza la opción/notas de un plato ya presente en el pedido, sin duplicarlo ni tocar su cantidad. */
+  updateItemDetails(
+    id: string,
+    option: string | undefined,
+    notes: string | undefined,
+  ): void {
+    const items = this.snapshot.items.map((i) =>
+      i.id === id ? { ...i, option, notes } : i,
+    );
+    this.patch({ items });
+  }
+
   removeItem(id: string): void {
     this.patch({ items: this.snapshot.items.filter((i) => i.id !== id) });
   }
@@ -61,19 +78,12 @@ export class OrderService {
     this.patch({ customerName: name, customerEmail: email, smsOptIn });
   }
 
-  get subtotal(): number {
-    return this.snapshot.items.reduce(
-      (sum, item) => sum + item.unitPrice * item.quantity,
-      0,
-    );
-  }
-
   /** Reinicia el pedido, p.ej. tras confirmar la reserva o cancelar. */
   clear(): void {
-    this.orderSubject.next({ ...EMPTY_ORDER });
+    this.orderSignal.set({ ...EMPTY_ORDER });
   }
 
   private patch(partial: Partial<Order>): void {
-    this.orderSubject.next({ ...this.snapshot, ...partial });
+    this.orderSignal.update((current) => ({ ...current, ...partial }));
   }
 }

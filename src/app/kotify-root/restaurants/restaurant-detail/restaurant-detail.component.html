@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true" class="restaurant-detail">
-  <ng-container *ngIf="restaurant$ | async as restaurant">
+  <ng-container *ngIf="restaurant() as restaurant">
     <div
       class="relative h-80 bg-cover bg-center flex items-end"
       [style.background-image]="'url(' + restaurant.heroImageUrl + ')'"
@@ -30,7 +30,7 @@
     </div>
 
     <div class="px-5 pt-6 pb-7">
-      <app-primary-button (pressed)="reserve(restaurant.id)">
+      <app-primary-button (pressed)="reserve()">
         Reservar y pedir
       </app-primary-button>
     </div>

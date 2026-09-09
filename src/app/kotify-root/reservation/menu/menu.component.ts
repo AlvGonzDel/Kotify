@@ -1,18 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
-import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
-import { OrderService } from '../../../core/services/order.service';
-
 import {
   MENU_CATEGORY_LABELS,
   MenuCategory,
   MenuItem,
-} from '../../../core/interfaces/menu.interface';
-import { Order } from '../../../core/interfaces/order.interface';
-import { MenuItemService } from '../../../core/services/menu.service';
-import { BackButtonComponent } from '../../../shared/components/back-buton/back-button.component';
+} from '../../../core/interfaces/menu-item.interface';
+import { MenuItemService } from '../../../core/services/menu-item.service';
+import { OrderService } from '../../../core/services/order.service';
+import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
 import { StepperComponent } from '../../../shared/components/stepper/stepper.component';
 
 @Component({
@@ -23,62 +20,56 @@ import { StepperComponent } from '../../../shared/components/stepper/stepper.com
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private menuItemService = inject(MenuItemService);
   private orderService = inject(OrderService);
+
+  /** Alimentado automáticamente desde /restaurants/:restaurantId/menu. */
+  restaurantId = input.required<string>();
 
   readonly categories = Object.entries(MENU_CATEGORY_LABELS) as [
     MenuCategory,
     string,
   ][];
-  private readonly categorySubject = new BehaviorSubject<MenuCategory>(
-    'entrantes',
-  );
+  private readonly categorySignal = signal<MenuCategory>('entrantes');
 
-  readonly order$: Observable<Order> = this.orderService.order$;
+  /** Pedido en curso, reactivo. */
+  readonly order = this.orderService.order;
 
-  readonly items$: Observable<MenuItem[]> = combineLatest([
-    this.menuItemService.getMenuByRestaurant(this.restaurantId),
-    this.categorySubject,
-  ]).pipe(
-    map(([items, category]) => items.filter((i) => i.category === category)),
-  );
-
-  get restaurantId(): string {
-    return this.route.snapshot.paramMap.get('restaurantId')!;
-  }
+  /** Platos de la categoría seleccionada; se recalcula solo si cambia el restaurante o la categoría. */
+  readonly items = computed<MenuItem[]>(() => {
+    const all = this.menuItemService.getMenuByRestaurant(this.restaurantId());
+    return all.filter((item) => item.category === this.categorySignal());
+  });
 
   get selectedCategory(): MenuCategory {
-    return this.categorySubject.value;
+    return this.categorySignal();
   }
 
   selectCategory(category: MenuCategory): void {
-    this.categorySubject.next(category);
+    this.categorySignal.set(category);
   }
 
   goBack(): void {
-    this.router.navigate(['/restaurants', this.restaurantId, 'party-size']);
+    this.router.navigate(['/restaurants', this.restaurantId(), 'party-size']);
   }
 
   hasOptions(item: MenuItem): boolean {
     return !!item.options?.length;
   }
 
-  quantityOf(item: MenuItem, order: Order): number {
-    return order.items
-      .filter((i) => i.id === item.id)
+  quantityOf(item: MenuItem): number {
+    return this.order()
+      .items.filter((i) => i.id === item.id)
       .reduce((sum, i) => sum + i.quantity, 0);
   }
 
   onAdd(item: MenuItem): void {
     if (this.hasOptions(item)) {
-      this.router.navigate([
-        '/restaurants',
-        this.restaurantId,
-        'menu',
-        item.id,
-      ]);
+      this.router.navigate(
+        ['/restaurants', this.restaurantId(), 'menu', item.id],
+        { queryParams: { mode: 'add' } },
+      );
       return;
     }
     this.orderService.addItem({
@@ -89,16 +80,28 @@ export class MenuComponent {
     });
   }
 
+  goToItemDetail(item: MenuItem): void {
+    this.router.navigate([
+      '/restaurants',
+      this.restaurantId(),
+      'menu',
+      item.id,
+    ]);
+  }
+
   onStepperChange(item: MenuItem, quantity: number): void {
     this.orderService.updateItemQuantity(item.id, quantity);
   }
 
-  orderItemCount(order: Order): number {
-    return order.items.reduce((sum, i) => sum + i.quantity, 0);
+  orderItemCount(): number {
+    return this.order().items.reduce((sum, i) => sum + i.quantity, 0);
   }
 
-  orderTotal(order: Order): number {
-    return order.items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
+  orderTotal(): number {
+    return this.order().items.reduce(
+      (sum, i) => sum + i.unitPrice * i.quantity,
+      0,
+    );
   }
 
   formatPrice(value: number): string {

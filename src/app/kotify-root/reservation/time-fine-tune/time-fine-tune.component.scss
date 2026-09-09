@@ -1,0 +1,24 @@
+// El fondo crema ya viene de la regla global "ion-content".
+.minute-wheel {
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+
+  // Clave del centrado: la caja mide 112px (h-28) y cada fila mide 56px.
+  // Sin este padding, cada fila se alinea contra el borde superior/inferior
+  // del contenedor, nunca contra su centro real. Con padding de
+  // (112-56)/2 = 28px arriba y abajo, scroll-snap-align:center puede
+  // centrar CUALQUIER fila (incluida la primera y la última) exactamente
+  // en el medio de la caja — a la misma altura que el "13" de HORA.
+  padding-top: 28px;
+  padding-bottom: 28px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.minute-row {
+  height: 56px; // debe coincidir EXACTAMENTE con ITEM_HEIGHT en time-fine-tune.component.ts
+  scroll-snap-align: center;
+}

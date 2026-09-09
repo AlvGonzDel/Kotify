@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, computed, inject, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
-import { Observable, switchMap } from 'rxjs';
-import { Restaurant } from '../../../core/interfaces/restaurant.interface';
 import { RestaurantService } from '../../../core/services/restaurants.service';
 import { PrimaryButtonComponent } from '../../../shared/components/primary-button/primary-button.component';
 
@@ -15,17 +13,17 @@ import { PrimaryButtonComponent } from '../../../shared/components/primary-butto
   styleUrls: ['./restaurant-detail.component.scss'],
 })
 export class RestaurantDetailComponent {
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private restaurantService = inject(RestaurantService);
 
-  restaurant$: Observable<Restaurant | undefined> = this.route.paramMap.pipe(
-    switchMap((params) =>
-      this.restaurantService.getRestaurantById(params.get('restaurantId')!),
-    ),
+  /** Alimentado automáticamente desde /restaurants/:restaurantId gracias a withComponentInputBinding. */
+  restaurantId = input.required<string>();
+
+  restaurant = computed(() =>
+    this.restaurantService.getRestaurantById(this.restaurantId()),
   );
 
-  reserve(restaurantId: string): void {
-    this.router.navigate(['/restaurants', restaurantId, 'party-size']);
+  reserve(): void {
+    this.router.navigate(['/restaurants', this.restaurantId(), 'party-size']);
   }
 }
