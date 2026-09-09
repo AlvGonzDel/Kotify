@@ -6,11 +6,8 @@
     >
       Carta
     </h1>
-    <span
-      class="text-sm text-kotify-muted min-w-[48px] text-right"
-      *ngIf="order$ | async as headerOrder"
-    >
-      {{ headerOrder.partySize }} pers.
+    <span class="text-sm text-kotify-muted min-w-[48px] text-right">
+      {{ order().partySize }} pers.
     </span>
   </div>
 
@@ -30,16 +27,14 @@
     </button>
   </div>
 
-  <div
-    class="px-5 pb-[100px] flex flex-col gap-3"
-    *ngIf="order$ | async as order"
-  >
+  <div class="px-5 pb-[100px] flex flex-col gap-3">
     <div
-      class="flex gap-3 bg-white rounded-2xl p-3.5 shadow-sm"
-      *ngFor="let item of items$ | async"
+      class="flex items-center gap-3 bg-white rounded-2xl p-3.5 shadow-sm"
+      *ngFor="let item of items()"
+      (click)="goToItemDetail(item)"
     >
       <div class="flex-1 min-w-0">
-        <h3 class="text-[15px] font-semibold text-kotify-ink mb-1">
+        <h3 class="text-[15px] font-semibold text-kotify-ink mb-1 truncate">
           {{ item.name }}
         </h3>
         <p class="text-[13px] text-kotify-muted mb-2.5 line-clamp-2">
@@ -50,33 +45,32 @@
             {{ formatPrice(item.price) }} €
           </span>
 
-          <ng-container
-            *ngIf="
-              !hasOptions(item) && quantityOf(item, order) > 0;
-              else addButton
-            "
-          >
-            <app-stepper
-              size="sm"
-              [value]="quantityOf(item, order)"
-              [min]="0"
-              (valueChange)="onStepperChange(item, $event)"
-            ></app-stepper>
-          </ng-container>
+          <div (click)="$event.stopPropagation()">
+            <ng-container *ngIf="quantityOf(item) > 0; else addButton">
+              <app-stepper
+                size="sm"
+                [value]="quantityOf(item)"
+                [min]="0"
+                [manualIncrease]="hasOptions(item)"
+                (valueChange)="onStepperChange(item, $event)"
+                (increaseRequested)="onAdd(item)"
+              ></app-stepper>
+            </ng-container>
 
-          <ng-template #addButton>
-            <button
-              type="button"
-              class="px-4 py-1.5 rounded-2xl bg-kotify-ink/[0.08] text-kotify-ink text-[13px] font-semibold"
-              (click)="onAdd(item)"
-            >
-              Añadir
-            </button>
-          </ng-template>
+            <ng-template #addButton>
+              <button
+                type="button"
+                class="px-4 py-1.5 rounded-2xl bg-kotify-ink/[0.08] text-kotify-ink text-[13px] font-semibold"
+                (click)="onAdd(item)"
+              >
+                Añadir
+              </button>
+            </ng-template>
+          </div>
         </div>
       </div>
       <img
-        class="w-[76px] h-[76px] rounded-xl object-cover flex-shrink-0"
+        class="w-28 h-28 rounded-xl object-cover flex-shrink-0"
         [src]="item.imageUrl"
         [alt]="item.name"
       />
@@ -85,10 +79,9 @@
 
   <div
     class="fixed bottom-0 left-0 right-0 px-5 pt-3 pb-6 pointer-events-none"
-    *ngIf="order$ | async as footerOrder"
+    *ngIf="order().items.length > 0"
   >
     <button
-      *ngIf="footerOrder.items.length > 0"
       type="button"
       class="pointer-events-auto w-full flex items-center gap-2.5 px-4 py-3.5 rounded-[28px] bg-kotify-ink shadow-lg"
       (click)="goToOrderSummary()"
@@ -96,13 +89,13 @@
       <span
         class="w-6 h-6 rounded-full bg-kotify-accent text-white text-xs font-bold flex items-center justify-center flex-shrink-0"
       >
-        {{ orderItemCount(footerOrder) }}
+        {{ orderItemCount() }}
       </span>
       <span class="flex-1 text-left text-white text-[15px] font-semibold">
         Ver pedido
       </span>
       <span class="text-white text-[15px] font-semibold">
-        {{ formatPrice(orderTotal(footerOrder)) }} €
+        {{ formatPrice(orderTotal()) }} €
       </span>
     </button>
   </div>

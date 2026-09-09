@@ -1,18 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Injectable, signal } from '@angular/core';
 import { Restaurant } from '../interfaces/restaurant.interface';
 import { MOCK_RESTAURANTS } from '../mocks/restaurant.mock';
 
 @Injectable({ providedIn: 'root' })
 export class RestaurantService {
-  /** Lista de restaurantes cercanos (para la pantalla restaurant-list). */
-  getRestaurants(): Observable<Restaurant[]> {
-    return of(MOCK_RESTAURANTS).pipe(delay(300));
-  }
+  private readonly restaurantsSignal = signal<Restaurant[]>(MOCK_RESTAURANTS);
+
+  /** Todos los restaurantes cercanos (para restaurant-list). */
+  readonly restaurants = this.restaurantsSignal.asReadonly();
 
   /** Detalle de un restaurante por id (para restaurant-detail). */
-  getRestaurantById(id: string): Observable<Restaurant | undefined> {
-    return of(MOCK_RESTAURANTS.find((r) => r.id === id)).pipe(delay(300));
+  getRestaurantById(id: string): Restaurant | undefined {
+    return this.restaurantsSignal().find((r) => r.id === id);
   }
 }

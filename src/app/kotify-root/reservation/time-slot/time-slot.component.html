@@ -1,3 +1,45 @@
-<p>
-  time-slot works!
-</p>
+<ion-content [fullscreen]="true" class="time-slot">
+  <div class="flex items-center px-5 py-4">
+    <app-back-button (back)="goBack()"></app-back-button>
+    <h1
+      class="flex-1 text-center text-xs font-semibold tracking-wider uppercase text-kotify-muted m-0"
+    >
+      Hora de llegada
+    </h1>
+    <span class="w-10"></span>
+  </div>
+
+  <div class="px-5 pb-8">
+    <h2 class="font-serif text-2xl text-kotify-ink font-medium mb-1">
+      ¿Cuándo llegas?
+    </h2>
+    <p class="text-sm text-kotify-muted mb-6">
+      Selecciona un intervalo disponible.
+    </p>
+
+    <div class="flex flex-col gap-2.5">
+      <button
+        type="button"
+        *ngFor="let slot of slots"
+        class="flex items-center justify-between bg-white rounded-2xl px-4 py-3.5 text-left disabled:opacity-40"
+        [disabled]="!slot.available"
+        (click)="selectSlot(slot)"
+      >
+        <span class="text-[15px] text-kotify-ink">
+          <span class="font-semibold">{{ slot.start }}</span>
+          <span class="text-kotify-muted"> — {{ slot.end }}</span>
+        </span>
+        <span
+          class="text-xs font-semibold px-2.5 py-1 rounded-full"
+          [ngClass]="
+            slot.available
+              ? 'bg-green-100 text-green-700'
+              : 'bg-kotify-ink/5 text-kotify-muted'
+          "
+        >
+          {{ slot.available ? "Disponible" : "Completo" }}
+        </span>
+      </button>
+    </div>
+  </div>
+</ion-content>

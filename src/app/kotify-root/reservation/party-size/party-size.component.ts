@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { OrderService } from '../../../core/services/order.service';
-import { BackButtonComponent } from '../../../shared/components/back-buton/back-button.component';
+import { BackButtonComponent } from '../../../shared/components/back-button/back-button.component';
 import { PrimaryButtonComponent } from '../../../shared/components/primary-button/primary-button.component';
 import { StepperComponent } from '../../../shared/components/stepper/stepper.component';
 
@@ -19,23 +19,23 @@ import { StepperComponent } from '../../../shared/components/stepper/stepper.com
   styleUrls: ['./party-size.component.scss'],
 })
 export class PartySizeComponent {
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private orderService = inject(OrderService);
 
+  /** Alimentado automáticamente desde /restaurants/:restaurantId/party-size. */
+  restaurantId = input.required<string>();
+
+  // Contador local: no necesita ser un signal porque solo se lee/escribe
+  // dentro de esta pantalla vía [(value)] con app-stepper.
   partySize = this.orderService.snapshot.partySize || 2;
 
-  get restaurantId(): string {
-    return this.route.snapshot.paramMap.get('restaurantId')!;
-  }
-
   goBack(): void {
-    this.router.navigate(['/restaurants', this.restaurantId]);
+    this.router.navigate(['/restaurants', this.restaurantId()]);
   }
 
   continue(): void {
-    this.orderService.setRestaurant(this.restaurantId);
+    this.orderService.setRestaurant(this.restaurantId());
     this.orderService.setPartySize(this.partySize);
-    this.router.navigate(['/restaurants', this.restaurantId, 'menu']);
+    this.router.navigate(['/restaurants', this.restaurantId(), 'menu']);
   }
 }

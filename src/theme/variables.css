@@ -17,3 +17,9 @@
   --kotify-accent: #c1501f;
   --kotify-accent-pressed: #a8420f;
 }
+
+/* Fondo por defecto para TODAS las pantallas — evita repetir
+   "--background: var(--kotify-cream)" en el .scss de cada página. */
+ion-content {
+  --background: var(--kotify-cream);
+}

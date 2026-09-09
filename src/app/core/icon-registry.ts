@@ -1,7 +1,12 @@
 import { addIcons } from 'ionicons';
-import { arrowBack, remove, add } from 'ionicons/icons';
+import { add, arrowBack, peopleOutline, remove } from 'ionicons/icons';
 
 /** Llamar una única vez en main.ts, antes de bootstrapApplication. */
 export function registerAppIcons(): void {
-  addIcons({ 'arrow-back': arrowBack, remove, add });
+  addIcons({
+    'arrow-back': arrowBack,
+    remove,
+    add,
+    people: peopleOutline,
+  });
 }

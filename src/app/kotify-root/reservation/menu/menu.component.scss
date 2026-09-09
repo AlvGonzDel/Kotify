@@ -1,7 +1,4 @@
 // Solo lo que Tailwind no puede expresar (ocultar scrollbar) y la variable de fondo de ion-content.
-.menu {
-  --background: var(--kotify-cream);
-}
 
 .no-scrollbar {
   scrollbar-width: none;
