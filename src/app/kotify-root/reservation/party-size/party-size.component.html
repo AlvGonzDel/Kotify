@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true" class="party-size relative">
+  <div class="absolute top-4 left-4 z-10">
+    <app-back-button (back)="goBack()"></app-back-button>
+  </div>
+
+  <div class="px-6 pt-20 text-center">
+    <p class="text-xs tracking-wider uppercase text-kotify-muted mb-3">
+      Reserva
+    </p>
+    <h1 class="font-serif text-[28px] text-kotify-ink font-medium mb-2">
+      ¿Para cuántas personas?
+    </h1>
+    <p class="text-sm text-kotify-muted mb-12">
+      El pedido se comparte entre todos.
+    </p>
+
+    <div class="flex justify-center">
+      <app-stepper
+        [(value)]="partySize"
+        [min]="1"
+        [max]="12"
+        size="lg"
+        label="Personas"
+      ></app-stepper>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 left-0 right-0 px-5 pt-4 pb-7">
+    <app-primary-button (pressed)="continue()"
+      >Ir a la carta</app-primary-button
+    >
+  </div>
+</ion-content>

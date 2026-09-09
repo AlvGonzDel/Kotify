@@ -1,10 +1,19 @@
 /**
  * Ionic Dark Theme
  * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
+ * Desactivado a propósito: Kotify usa un tema fijo (crema/terracota),
+ * no queremos que cambie según el modo oscuro del sistema operativo.
+ * Para más info: https://ionicframework.com/docs/theming/dark-mode
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
+:root {
+  --kotify-cream: #f7f3ec;
+  --kotify-ink: #2b2420;
+  --kotify-muted: #8a6f5c;
+  --kotify-accent: #c1501f;
+  --kotify-accent-pressed: #a8420f;
+}

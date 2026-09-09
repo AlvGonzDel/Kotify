@@ -1,0 +1,14 @@
+// Solo la variable CSS de fondo de ion-content y el gradiente del hero
+// (estático, no tiene sentido como clase Tailwind repetida ni como inline style).
+.restaurant-detail {
+  --background: var(--kotify-cream);
+}
+
+.hero-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.25) 60%,
+    transparent 100%
+  );
+}

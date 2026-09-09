@@ -1,0 +1,38 @@
+<ion-content [fullscreen]="true" class="restaurant-detail">
+  <ng-container *ngIf="restaurant$ | async as restaurant">
+    <div
+      class="relative h-80 bg-cover bg-center flex items-end"
+      [style.background-image]="'url(' + restaurant.heroImageUrl + ')'"
+    >
+      <div class="hero-overlay w-full px-5 py-6 text-white">
+        <h1 class="font-serif text-3xl font-medium mb-2 leading-tight">
+          {{ restaurant.name }}
+        </h1>
+        <p class="flex items-center gap-1.5 text-sm opacity-90 m-0">
+          <span>{{ restaurant.location }}</span>
+          <span class="opacity-60">·</span>
+          <span>{{ restaurant.hours }}</span>
+          <span class="opacity-60">·</span>
+          <span>{{ restaurant.address }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="px-5 pt-6">
+      <p
+        class="text-kotify-muted text-[15px] leading-relaxed mb-4 max-w-[40ch]"
+      >
+        {{ restaurant.description }}
+      </p>
+      <p class="text-kotify-ink font-semibold text-[15px] m-0">
+        Reserva y pide antes de llegar.
+      </p>
+    </div>
+
+    <div class="px-5 pt-6 pb-7">
+      <app-primary-button (pressed)="reserve(restaurant.id)">
+        Reservar y pedir
+      </app-primary-button>
+    </div>
+  </ng-container>
+</ion-content>

@@ -1,0 +1,13 @@
+// Solo variables CSS de ion-button — viven en Shadow DOM, Tailwind no puede alcanzarlas.
+.primary-button {
+  --background: var(--kotify-accent);
+  --background-activated: var(--kotify-accent-pressed);
+  --background-hover: var(--kotify-accent-pressed);
+  --border-radius: 28px;
+  --box-shadow: none;
+  --color: #ffffff;
+  height: 56px;
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: none;
+}

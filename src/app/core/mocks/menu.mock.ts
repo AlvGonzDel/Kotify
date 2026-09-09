@@ -1,0 +1,103 @@
+import { MenuItem } from '../interfaces/menu.interface';
+
+// Datos de prueba. Sustituir por llamadas HTTP reales cuando exista la API.
+export const MOCK_MENU_ITEMS: MenuItem[] = [
+  {
+    id: 'croquetas-jamon-iberico',
+    restaurantId: 'casa-levante',
+    category: 'entrantes',
+    name: 'Croquetas de jamón ibérico',
+    description:
+      'Seis unidades de croqueta artesanal con jamón ibérico D.O. Guijuelo.',
+    price: 8.5,
+    imageUrl: 'https://picsum.photos/seed/croquetas/300/300',
+  },
+  {
+    id: 'gambas-al-ajillo',
+    restaurantId: 'casa-levante',
+    category: 'entrantes',
+    name: 'Gambas al ajillo',
+    description:
+      'Gambas frescas del Mediterráneo salteadas con ajo y guindilla.',
+    price: 12.9,
+    imageUrl: 'https://picsum.photos/seed/gambas/300/300',
+  },
+  {
+    id: 'ensalada-burrata',
+    restaurantId: 'casa-levante',
+    category: 'entrantes',
+    name: 'Ensalada de burrata',
+    description:
+      'Burrata cremosa de Apulia con tomate de temporada, albahaca fresca y reducción de Pedro Ximénez.',
+    price: 11.5,
+    imageUrl: 'https://picsum.photos/seed/burrata/300/300',
+    options: [
+      { id: 'clasico', label: 'Clásico' },
+      { id: 'sin-alino', label: 'Sin aliño' },
+      { id: 'extra-aceite', label: 'Extra aceite de oliva' },
+    ],
+  },
+  {
+    id: 'jamon-iberico-bellota',
+    restaurantId: 'casa-levante',
+    category: 'entrantes',
+    name: 'Jamón ibérico de bellota',
+    description: 'Cortado a cuchillo. D.O. Guijuelo, curación 48 meses.',
+    price: 18.0,
+    imageUrl: 'https://picsum.photos/seed/jamon/300/300',
+  },
+  {
+    id: 'tarta-de-queso',
+    restaurantId: 'casa-levante',
+    category: 'postres',
+    name: 'Tarta de queso',
+    description: 'Tarta de queso cremosa al horno.',
+    price: 7.5,
+    imageUrl: 'https://picsum.photos/seed/tarta-queso/300/300',
+  },
+  {
+    id: 'coulant-chocolate',
+    restaurantId: 'casa-levante',
+    category: 'postres',
+    name: 'Coulant de chocolate',
+    description: 'Bizcocho de chocolate con corazón fundente.',
+    price: 7.0,
+    imageUrl: 'https://picsum.photos/seed/coulant/300/300',
+  },
+  {
+    id: 'crema-catalana',
+    restaurantId: 'casa-levante',
+    category: 'postres',
+    name: 'Crema catalana',
+    description: 'Crema catalana tradicional con azúcar quemado.',
+    price: 6.0,
+    imageUrl: 'https://picsum.photos/seed/crema-catalana/300/300',
+  },
+  {
+    id: 'vino-tinto-monastrell',
+    restaurantId: 'casa-levante',
+    category: 'bebidas',
+    name: 'Vino tinto Monastrell',
+    description: 'Copa de vino tinto de la D.O. Jumilla.',
+    price: 5.5,
+    imageUrl: 'https://picsum.photos/seed/vino-tinto/300/300',
+  },
+  {
+    id: 'vino-blanco-verdejo',
+    restaurantId: 'casa-levante',
+    category: 'bebidas',
+    name: 'Vino blanco Verdejo',
+    description: 'Copa de vino blanco de la D.O. Rueda.',
+    price: 5.5,
+    imageUrl: 'https://picsum.photos/seed/vino-blanco/300/300',
+  },
+  {
+    id: 'cafe',
+    restaurantId: 'casa-levante',
+    category: 'bebidas',
+    name: 'Café',
+    description: 'Café solo, cortado o con leche.',
+    price: 1.8,
+    imageUrl: 'https://picsum.photos/seed/cafe/300/300',
+  },
+];
