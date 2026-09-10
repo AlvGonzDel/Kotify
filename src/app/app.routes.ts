@@ -127,7 +127,27 @@ export const routes: Routes = [
         (m) => m.ChangeTimeComponent,
       ),
   },
-
+  {
+    path: 'reservations/:reservationId/cancel',
+    loadComponent: () =>
+      import('./kotify-root/reservation/cancel-reservation/cancel-reservation.component').then(
+        (m) => m.CancelReservationComponent,
+      ),
+  },
+  {
+    path: 'cancellation-confirmed',
+    loadComponent: () =>
+      import('./kotify-root/reservation/cancellation-confirmed/cancellation-confirmed.component').then(
+        (m) => m.CancellationConfirmedComponent,
+      ),
+  },
+  {
+    path: 'reservations/:reservationId/rating',
+    loadComponent: () =>
+      import('./kotify-root/reservation/rating/rating.component').then(
+        (m) => m.RatingComponent,
+      ),
+  },
   // Fallback
   {
     path: '**',

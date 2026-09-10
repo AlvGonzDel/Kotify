@@ -1,3 +1,125 @@
-<p>
-  checkout works!
-</p>
+<ion-content [fullscreen]="true" class="checkout" *ngIf="order() as order">
+  <div class="flex items-center px-5 py-4">
+    <app-back-button (back)="goBack()"></app-back-button>
+    <h1
+      class="flex-1 text-center text-xs font-semibold tracking-wider uppercase text-kotify-muted m-0"
+    >
+      Checkout
+    </h1>
+    <span class="w-10"></span>
+  </div>
+
+  <div class="px-5 flex flex-col gap-3 pb-40">
+    <div class="bg-white rounded-2xl px-4 py-3.5">
+      <p class="text-xs tracking-wider uppercase text-kotify-muted mb-3">
+        Reserva
+      </p>
+      <div class="flex items-center justify-between text-[14px] mb-2">
+        <span class="text-kotify-muted">Restaurante</span>
+        <span class="text-kotify-ink font-semibold">{{ restaurantName }}</span>
+      </div>
+      <div class="flex items-center justify-between text-[14px] mb-2">
+        <span class="text-kotify-muted">Fecha</span>
+        <span class="text-kotify-ink font-semibold">{{ formattedDate }}</span>
+      </div>
+      <div class="flex items-center justify-between text-[14px] mb-2">
+        <span class="text-kotify-muted">Hora de llegada</span>
+        <span class="text-kotify-ink font-semibold">
+          {{ order.arrivalTime }}
+        </span>
+      </div>
+      <div class="flex items-center justify-between text-[14px] mb-2">
+        <span class="text-kotify-muted">Personas</span>
+        <span class="text-kotify-ink font-semibold">{{ order.partySize }}</span>
+      </div>
+      <div class="flex items-center justify-between text-[14px]">
+        <span class="text-kotify-muted">Email</span>
+        <span class="text-kotify-ink font-semibold">
+          {{ order.customerEmail }}
+        </span>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl px-4 py-3.5">
+      <p class="text-xs tracking-wider uppercase text-kotify-muted mb-3">
+        Pedido
+      </p>
+      <div
+        class="flex items-center justify-between text-[14px] mb-2"
+        *ngFor="let item of order.items"
+      >
+        <span class="text-kotify-ink">{{ item.name }}</span>
+        <span class="text-kotify-ink">
+          {{ formatPrice(item.unitPrice * item.quantity) }} €
+        </span>
+      </div>
+      <div class="border-t border-kotify-ink/10 my-2"></div>
+      <div
+        class="flex items-center justify-between text-[15px] font-semibold text-kotify-ink"
+      >
+        <span>Total</span>
+        <span>{{ formatPrice(total()) }} €</span>
+      </div>
+    </div>
+
+    <div class="bg-[#fdf6e3] rounded-2xl px-4 py-3.5">
+      <p class="text-[13px] font-semibold text-[#b5651d] mb-2">
+        Política de cancelación
+      </p>
+      <p class="text-[13px] text-[#8a6f5c] mb-1">
+        + de 30 min antes → 100% de devolución
+      </p>
+      <p class="text-[13px] text-[#8a6f5c] mb-1">
+        15 – 30 min antes → 90% de devolución
+      </p>
+      <p class="text-[13px] text-[#8a6f5c] mb-1">
+        – de 15 min antes → 50% de devolución
+      </p>
+      <p class="text-[13px] text-[#8a6f5c]">No-show → Sin devolución</p>
+    </div>
+  </div>
+
+  <div
+    class="fixed bottom-0 left-0 right-0 px-5 pb-7 pt-3 bg-kotify-cream flex flex-col gap-3"
+  >
+    <div class="flex gap-3">
+      <button
+        type="button"
+        class="flex-1 flex items-center justify-center gap-1.5 bg-black text-white rounded-2xl py-3 text-sm font-semibold border border-solid"
+        [ngClass]="
+          selectedPayment === 'apple'
+            ? 'border-[#c1501f]'
+            : 'border-transparent'
+        "
+        (click)="selectPayment('apple')"
+      >
+        <ion-icon name="logo-apple" class="text-lg"></ion-icon>
+        Apple Pay
+      </button>
+      <button
+        type="button"
+        class="flex-1 flex items-center justify-center gap-1.5 bg-white text-kotify-ink rounded-2xl py-3 text-sm font-semibold border border-solid"
+        [ngClass]="
+          selectedPayment === 'google'
+            ? 'border-[#c1501f]'
+            : 'border-kotify-ink/10'
+        "
+        (click)="selectPayment('google')"
+      >
+        <span class="font-semibold">
+          <span class="text-[#4285F4]">G</span
+          ><span class="text-[#EA4335]">o</span
+          ><span class="text-[#FBBC05]">o</span
+          ><span class="text-[#4285F4]">g</span
+          ><span class="text-[#34A853]">l</span
+          ><span class="text-[#EA4335]">e</span>
+        </span>
+        Pay
+      </button>
+    </div>
+
+    <app-primary-button (pressed)="payAndReserve()">
+      Pagar y reservar · {{ formatPrice(total()) }} €
+    </app-primary-button>
+  </div>
+</ion-content>

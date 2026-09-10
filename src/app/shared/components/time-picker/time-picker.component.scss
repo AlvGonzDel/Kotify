@@ -1,0 +1,19 @@
+.minute-wheel {
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+
+  // Centra cualquier fila (incluida la primera y la última) en el
+  // centro real de la caja de 112px, no contra su propio borde.
+  padding-top: 28px;
+  padding-bottom: 28px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.minute-row {
+  height: 56px; // debe coincidir EXACTAMENTE con ITEM_HEIGHT en time-picker.component.ts
+  scroll-snap-align: center;
+}
