@@ -1,0 +1,71 @@
+<ion-content [fullscreen]="true" class="rating">
+  <ng-container *ngIf="reservation() as reservation">
+    <div class="px-5 py-4 text-center">
+      <p class="text-xs tracking-wider uppercase text-kotify-muted mb-4">
+        Valoración
+      </p>
+      <h1 class="font-serif text-2xl text-kotify-ink font-medium mb-1">
+        ¿Cómo fue tu experiencia?
+      </h1>
+      <p class="text-sm text-kotify-muted">
+        {{ reservation.restaurantName }} · Hoy
+      </p>
+    </div>
+
+    <div class="px-5 pb-6">
+      <div class="bg-white rounded-2xl px-4 py-3.5 flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <span class="text-[15px] font-semibold text-kotify-ink">
+            Valoración general
+          </span>
+          <app-star-rating [(value)]="overall"></app-star-rating>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[15px] text-kotify-ink">Comida</span>
+          <app-star-rating [(value)]="food"></app-star-rating>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[15px] text-kotify-ink">Servicio</span>
+          <app-star-rating [(value)]="service"></app-star-rating>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-[15px] text-kotify-ink">Puntualidad</span>
+          <app-star-rating [(value)]="punctuality"></app-star-rating>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-5 pb-40">
+      <p class="text-xs tracking-wider uppercase text-kotify-muted mb-2">
+        Comentario (opcional)
+      </p>
+      <textarea
+        class="w-full bg-white rounded-2xl px-4 py-3.5 text-[15px] text-[#2b2420] placeholder:text-[#8a6f5c] border border-solid border-transparent focus:border-[#c1501f] focus:outline-none resize-none"
+        rows="4"
+        placeholder="Cuéntanos qué te pareció la experiencia…"
+        [(ngModel)]="comment"
+      ></textarea>
+    </div>
+
+    <div
+      class="fixed bottom-0 left-0 right-0 px-5 pt-3 pb-7 bg-kotify-cream flex flex-col items-center gap-3"
+    >
+      <button
+        type="button"
+        class="w-full rounded-2xl py-3.5 text-[15px] font-semibold text-white"
+        [ngClass]="canSubmit ? 'bg-[#c1501f]' : 'bg-[#c1501f]/50'"
+        [disabled]="!canSubmit"
+        (click)="submit()"
+      >
+        Enviar valoración
+      </button>
+      <button
+        type="button"
+        class="text-sm text-kotify-muted/70 font-medium"
+        (click)="skip()"
+      >
+        Omitir
+      </button>
+    </div>
+  </ng-container>
+</ion-content>

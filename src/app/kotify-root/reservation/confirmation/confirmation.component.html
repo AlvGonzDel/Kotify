@@ -1,3 +1,64 @@
-<p>
-  confirmation works!
-</p>
+<ion-content
+  [fullscreen]="true"
+  class="confirmation"
+  *ngIf="reservation() as reservation"
+>
+  <div class="bg-kotify-ink text-white px-5 pt-8 pb-8 rounded-b-3xl">
+    <div class="flex items-center gap-2 mb-6">
+      <span
+        class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center"
+      >
+        <ion-icon name="checkmark" class="text-white text-xs"></ion-icon>
+      </span>
+      <span class="text-sm font-medium">Reserva confirmada</span>
+    </div>
+
+    <p class="text-xs tracking-wider uppercase text-white/60 mb-1">Llegada</p>
+    <p class="font-serif text-5xl mb-4">{{ reservation.arrivalTime }}</p>
+
+    <p class="text-[15px] font-medium mb-0.5">
+      {{ reservation.restaurantName }} · {{ reservation.date }}
+    </p>
+    <p class="text-[13px] text-white/60">
+      {{ reservation.restaurantAddress }} · {{ reservation.partySize }} personas
+    </p>
+  </div>
+
+  <div class="px-5 -mt-4">
+    <div class="bg-white rounded-2xl px-4 py-5 text-center shadow-sm mb-3">
+      <p class="text-xs tracking-wider uppercase text-kotify-muted mb-4">
+        Muéstralo al llegar
+      </p>
+      <img
+        [src]="qrUrl(reservation.id)"
+        alt="Código QR de la reserva"
+        class="w-40 h-40 mx-auto mb-3"
+      />
+      <p class="text-xs text-kotify-muted">#{{ reservation.id }}</p>
+    </div>
+
+    <div class="bg-white rounded-2xl px-4 py-3.5 mb-4">
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-xs tracking-wider uppercase text-kotify-muted">Pedido</p>
+        <p class="text-[15px] font-semibold text-kotify-ink">
+          {{ formatPrice(reservation.total) }} €
+        </p>
+      </div>
+      <p
+        class="text-[14px] text-kotify-ink mb-1"
+        *ngFor="let item of reservation.items"
+      >
+        {{ item.name }}
+      </p>
+    </div>
+
+    <p class="text-xs text-kotify-muted text-center mb-6">
+      Confirmación enviada a {{ reservation.customerEmail }}. Tienes 10 min de
+      cortesía desde tu hora reservada.
+    </p>
+
+    <app-primary-button (pressed)="viewReservation(reservation.id)">
+      Ver mi reserva
+    </app-primary-button>
+  </div>
+</ion-content>

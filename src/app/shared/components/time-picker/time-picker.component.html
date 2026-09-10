@@ -1,0 +1,86 @@
+<div class="px-6 text-center">
+  <h2 class="font-serif text-2xl text-kotify-ink font-medium mb-1">
+    Elige tu hora
+  </h2>
+  <p class="text-sm text-kotify-muted mb-1">
+    Intervalo: {{ slot.start }} – {{ slot.end }}
+  </p>
+  <p class="text-sm text-kotify-muted mb-8">
+    Desliza los minutos para afinar tu llegada.
+  </p>
+
+  <div class="flex items-start justify-center gap-3 mb-8">
+    <!-- HORA -->
+    <div class="flex flex-col items-center gap-2">
+      <div class="h-4 flex items-center">
+        <p
+          class="text-xs tracking-wider uppercase text-kotify-muted leading-none m-0"
+        >
+          Hora
+        </p>
+      </div>
+      <div
+        class="w-24 h-28 bg-white rounded-2xl flex items-center justify-center"
+      >
+        <span class="font-serif text-3xl leading-none text-kotify-ink">
+          {{ pad(hour) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- ':' -->
+    <div class="flex flex-col items-center gap-2">
+      <div class="h-4" aria-hidden="true"></div>
+      <div class="h-28 flex items-center justify-center">
+        <span class="font-serif text-3xl leading-none text-kotify-ink/40">
+          :
+        </span>
+      </div>
+    </div>
+
+    <!-- MINUTOS -->
+    <div class="flex flex-col items-center gap-2">
+      <div class="h-4 flex items-center">
+        <p
+          class="text-xs tracking-wider uppercase text-kotify-muted leading-none m-0"
+        >
+          Minutos
+        </p>
+      </div>
+      <div
+        #minuteWheel
+        class="minute-wheel w-24 h-28 bg-white rounded-2xl overflow-y-auto"
+        (scroll)="onWheelScroll($event)"
+      >
+        <div
+          *ngFor="let m of minuteOptions"
+          class="minute-row flex items-center justify-center"
+        >
+          <span
+            class="font-serif text-3xl leading-none"
+            [ngClass]="
+              m === minute
+                ? 'text-kotify-ink font-semibold'
+                : 'text-kotify-ink/30'
+            "
+          >
+            {{ pad(m) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-kotify-ink/5 rounded-2xl py-5 mb-8">
+    <p class="text-xs tracking-wider uppercase text-kotify-muted mb-1">
+      Llegaré a las
+    </p>
+    <p class="font-serif text-4xl text-kotify-ink">{{ arrivalTimeLabel }}</p>
+  </div>
+</div>
+
+<div class="px-5 pb-7">
+  <app-primary-button (pressed)="confirm()">
+    Confirmar hora · {{ arrivalTimeLabel }}
+  </app-primary-button>
+</div>

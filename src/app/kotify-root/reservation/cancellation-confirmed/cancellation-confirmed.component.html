@@ -1,0 +1,27 @@
+<ion-content [fullscreen]="true" class="cancellation-confirmed">
+  <div class="px-6 pt-10 text-center">
+    <button
+      type="button"
+      class="w-12 h-12 rounded-full bg-kotify-ink/5 flex items-center justify-center mx-auto mb-6"
+      aria-label="Cerrar"
+    >
+      <ion-icon name="close" class="text-xl text-kotify-ink"></ion-icon>
+    </button>
+
+    <h1 class="font-serif text-2xl text-kotify-ink font-medium mb-3">
+      Reserva cancelada
+    </h1>
+    <p class="text-sm text-kotify-muted mb-8 leading-relaxed">
+      La devolución tardará entre 3 y 5 días hábiles. Te confirmaremos por
+      email.
+    </p>
+
+    <button
+      type="button"
+      class="w-full bg-white rounded-2xl py-3.5 text-[15px] font-semibold text-kotify-ink border border-solid border-kotify-ink/10"
+      (click)="goHome()"
+    >
+      Volver al inicio
+    </button>
+  </div>
+</ion-content>

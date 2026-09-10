@@ -1,3 +1,161 @@
-<p>
-  my-reservation works!
-</p>
+<ion-content [fullscreen]="true" class="my-reservation">
+  <ng-container *ngIf="reservation() as reservation">
+    <div class="flex items-start justify-between px-5 py-4">
+      <span class="w-10"></span>
+      <h1
+        class="flex-1 text-center text-xs font-semibold tracking-wider uppercase text-kotify-muted m-0 mt-2"
+      >
+        Mi reserva
+      </h1>
+      <div class="flex flex-col gap-1.5 items-end">
+        <button
+          *ngFor="let status of statuses"
+          type="button"
+          class="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap"
+          [ngClass]="
+            status === reservation.status
+              ? 'bg-kotify-accent text-white'
+              : 'bg-white text-kotify-muted border border-solid border-kotify-ink/10'
+          "
+          (click)="setStatus(status)"
+        >
+          {{ statusLabel(status) }}
+        </button>
+      </div>
+    </div>
+
+    <div class="px-5 flex flex-col gap-3 pb-8">
+      <div class="bg-white rounded-2xl px-4 py-3.5">
+        <div class="flex items-start justify-between mb-1">
+          <h2 class="font-serif text-xl text-kotify-ink font-medium">
+            {{ reservation.restaurantName }}
+          </h2>
+          <span
+            class="flex items-center gap-1.5 text-xs font-medium text-kotify-muted whitespace-nowrap mt-1"
+          >
+            <span
+              class="w-2 h-2 rounded-full"
+              [ngClass]="statusDotClass(reservation.status)"
+            ></span>
+            {{ statusLabel(reservation.status) }}
+          </span>
+        </div>
+        <p class="text-sm text-kotify-muted mb-1">
+          {{ reservation.date }} · {{ reservation.arrivalTime }}
+        </p>
+        <p class="text-sm text-kotify-muted mb-4">
+          {{ reservation.partySize }} personas
+        </p>
+
+        <div
+          class="bg-kotify-cream rounded-2xl py-5 flex flex-col items-center mb-3"
+        >
+          <img
+            [src]="qrUrl(reservation.id)"
+            alt="Código QR de la reserva"
+            class="w-36 h-36"
+          />
+        </div>
+        <p class="text-xs text-kotify-muted text-center">
+          #{{ reservation.id }} · Muéstralo al llegar
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl px-4 py-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-xs tracking-wider uppercase text-kotify-muted">
+            Pedido
+          </p>
+          <p class="text-[15px] font-semibold text-kotify-ink">
+            {{ formatPrice(reservation.total) }} €
+          </p>
+        </div>
+        <p
+          class="text-[14px] text-kotify-ink"
+          *ngFor="let item of reservation.items"
+        >
+          {{ item.name }}
+        </p>
+      </div>
+
+      <!-- Banner según estado -->
+      <div
+        *ngIf="reservation.status === 'preparing'"
+        class="bg-[#fdf6e3] rounded-2xl px-4 py-3.5 flex items-center gap-3"
+      >
+        <span
+          class="w-9 h-9 rounded-full bg-[#f4c95d] flex items-center justify-center flex-shrink-0"
+        >
+          <ion-icon name="restaurant" class="text-white"></ion-icon>
+        </span>
+        <div>
+          <p class="text-[14px] font-semibold text-[#b5651d] mb-0.5">
+            Tu comida está en preparación
+          </p>
+          <p class="text-[13px] text-[#b5651d]">Ver detalle →</p>
+        </div>
+      </div>
+
+      <div
+        *ngIf="reservation.status === 'arrived'"
+        class="bg-blue-50 rounded-2xl px-4 py-3.5 flex items-center gap-3"
+      >
+        <span
+          class="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0"
+        >
+          <ion-icon name="checkmark" class="text-white"></ion-icon>
+        </span>
+        <div>
+          <p class="text-[14px] font-semibold text-blue-700 mb-0.5">
+            Check-in realizado
+          </p>
+          <p class="text-[13px] text-blue-700">Tu mesa está lista →</p>
+        </div>
+      </div>
+
+      <button
+        *ngIf="reservation.status === 'completed'"
+        type="button"
+        class="w-full bg-white rounded-2xl px-4 py-3.5 flex items-center gap-3 border border-solid border-kotify-ink/10 text-left"
+        (click)="goToRating()"
+      >
+        <span
+          class="w-9 h-9 rounded-full bg-kotify-ink/10 flex items-center justify-center flex-shrink-0"
+        >
+          <ion-icon name="star" class="text-kotify-muted"></ion-icon>
+        </span>
+        <div>
+          <p class="text-[14px] font-semibold text-kotify-ink mb-1">
+            ¿Cómo fue tu experiencia?
+          </p>
+          <p class="text-[13px] text-kotify-muted">
+            Valora tu visita en {{ reservation.restaurantName }} →
+          </p>
+        </div>
+      </button>
+
+      <!-- Acciones según estado -->
+      <button
+        *ngIf="
+          reservation.status === 'confirmed' ||
+          reservation.status === 'preparing'
+        "
+        type="button"
+        class="w-full bg-white rounded-2xl py-3.5 flex items-center justify-center gap-2 text-[15px] font-semibold text-kotify-ink border border-solid border-kotify-ink/10"
+        (click)="reportProblem()"
+      >
+        <ion-icon name="time-outline"></ion-icon>
+        Tengo un problema
+      </button>
+
+      <button
+        *ngIf="reservation.status === 'confirmed'"
+        type="button"
+        class="w-full bg-red-50 rounded-2xl py-3.5 text-[15px] font-semibold text-red-600 border border-solid border-red-100"
+        (click)="cancelReservation()"
+      >
+        Cancelar reserva
+      </button>
+    </div>
+  </ng-container>
+</ion-content>
